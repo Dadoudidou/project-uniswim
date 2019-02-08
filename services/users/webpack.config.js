@@ -5,7 +5,7 @@ const config = {
     entry: './src/index.ts',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: '[name].[contenthash].js'
+        filename: 'server.js'
     },
     module: {
         rules: [
@@ -26,17 +26,11 @@ const config = {
     plugins: [
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
     ],
+    devServer: {
+        contentBase: './dist'
+    },
     optimization: {
-        runtimeChunk: 'single',
-        splitChunks: {
-            cacheGroups: {
-                vendor: {
-                    test: /[\\\/]node_modules[\\\/]/,
-                    name: 'vendors',
-                    chunks: 'all'
-                }
-            }
-        }
+
     }
 }
 
