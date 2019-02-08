@@ -1,0 +1,35 @@
+{
+  "name": "uniswim-users",
+  "version": "0.0.1",
+  "description": "Gestion d'utilisateurs par application\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[C\u001b[C, droits\u001b[2~ par application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm dist/bundle.js",
+    "build-dev": "webpack -d --mode development",
+    "build-prod": "webpack -p --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dadoudidou/project-uniswim.git"
+  },
+  "author": "Dadoudidou",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dadoudidou/project-uniswim/issues"
+  },
+  "homepage": "https://github.com/Dadoudidou/project-uniswim#readme",
+  "devDependencies": {
+    "webpack": "4.29.3",
+    "webpack-cli": "3.2.3",
+    "typescript": "3.3.3",
+    "ts-loader": "5.3.3"
+  },
+  "dependencies": {
+    "debug": "4.1.1",
+    "nconf": "0.10.0",
+    "winston": "3.2.1",
+    "passport": "0.4.0",
+    "moment": "2.24.0"
+  }
+}
