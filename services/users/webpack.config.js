@@ -29,7 +29,8 @@ const config = {
             "@config": path.join(__dirname,"src/config"),
             "@database/*": path.join(__dirname,"src/database"),
             "@domain/*": path.join(__dirname,"src/domain"),
-            "@logs/*": path.join(__dirname,"src/logs")
+            "@logs/*": path.join(__dirname,"src/logs"),
+            "@utils/*": path.join(__dirname,"src/utils")
         }
     },
     externals: [ 'pg', 'sqlite3', 'tedious', 'pg-hstore'],

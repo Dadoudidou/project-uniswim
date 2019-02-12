@@ -13,7 +13,8 @@ import ClientApplication from "./models/ClientApplication";
 import RoleAbilite from "./models/RoleAbilite";
 import UtilisateurAbilite from "./models/UtilisateurAbilite";
 import UtilisateurRole from "./models/UtilisateurRole";
-import { Player, Team } from "./models/Test";
+import ResetPasswordToken from "./models/ResetPasswordToken";
+
 
 
 const sequelize = new Sequelize({
@@ -23,12 +24,13 @@ const sequelize = new Sequelize({
 sequelize.addModels([ 
     Contact, Client, Application, Abilite, Role, 
     Utilisateur, ClientApplication, RoleAbilite, 
-    UtilisateurAbilite, UtilisateurRole 
+    UtilisateurAbilite, UtilisateurRole,
+    ResetPasswordToken
 ]);
 
 
 const models = {
-    Client, Contact, Application, Abilite, Role, Utilisateur
+    Client, Contact, Application, Abilite, Role, Utilisateur, ResetPasswordToken
 }
 
 export default {

@@ -18,7 +18,8 @@
             "@config/*":["src/config"],
             "@database/*":["src/database"],
             "@domain/*":["src/domain"],
-            "@logs/*":["src/logs"]
+            "@logs/*":["src/logs"],
+            "@utils/*":["src/utils"]
         }
     },
     "include": [

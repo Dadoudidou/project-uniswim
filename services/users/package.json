@@ -41,6 +41,8 @@
     "sequelize-typescript": "0.6.7",
     "@dadoudidou/migration": "0.1.4",
     "dotenv": "6.2.0",
+    "bcrypt": "3.0.4",
+    "@types/bcrypt": "3.0.0",
     "@types/sequelize": "4.27.35",
     "@types/debug": "4.1.0",
     "@types/nconf": "0.10.0",
