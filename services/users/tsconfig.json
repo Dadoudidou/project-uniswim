@@ -1,14 +1,25 @@
 {
     "compilerOptions": {
         "outDir": "./dist/",
+        "baseUrl": "./",
+        "rootDirs": ["src"],
         "sourceMap": true,
         "strict": true,
         "noImplicitReturns": true,
         "noImplicitAny": true,
         "module": "es6",
         "moduleResolution": "node",
-        "target": "es5",
+        "target": "ES2017",
         "allowJs": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "strictPropertyInitialization": false,
+        "paths": {
+            "@config/*":["src/config"],
+            "@database/*":["src/database"],
+            "@domain/*":["src/domain"],
+            "@logs/*":["src/logs"]
+        }
     },
     "include": [
         "./src/**/*"
