@@ -14,12 +14,14 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "strictPropertyInitialization": false,
+        "strictNullChecks": false,
         "paths": {
             "@config/*":["src/config"],
             "@database/*":["src/database"],
             "@domain/*":["src/domain"],
             "@logs/*":["src/logs"],
-            "@utils/*":["src/utils"]
+            "@utils/*":["src/utils"],
+            "@graphQL/*":["src/server/graphQL"]
         }
     },
     "include": [

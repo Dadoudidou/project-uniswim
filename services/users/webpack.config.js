@@ -30,7 +30,8 @@ const config = {
             "@database/*": path.join(__dirname,"src/database"),
             "@domain/*": path.join(__dirname,"src/domain"),
             "@logs/*": path.join(__dirname,"src/logs"),
-            "@utils/*": path.join(__dirname,"src/utils")
+            "@utils/*": path.join(__dirname,"src/utils"),
+            "@graphQL/*": path.join(__dirname,"src/server/graphQL")
         }
     },
     externals: [ 'pg', 'sqlite3', 'tedious', 'pg-hstore'],

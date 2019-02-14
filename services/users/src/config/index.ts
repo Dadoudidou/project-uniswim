@@ -8,6 +8,9 @@ nconf.env();
 
 type config = {
     bdd: SequelizeConfig
+    server: {
+        port: number
+    }
 }
 
 const config: config = {
@@ -21,6 +24,9 @@ const config: config = {
         define: {
             timestamps: false
         }
+    },
+    server: {
+        port: 8080
     }
 }
 
