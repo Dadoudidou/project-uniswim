@@ -22,7 +22,8 @@
             "@logs/*":["src/logs"],
             "@utils/*":["src/utils"],
             "@graphQL/*":["src/server/graphQL"]
-        }
+        },
+        "lib": ["dom", "es2018", "esnext"]
     },
     "include": [
         "./src/**/*"

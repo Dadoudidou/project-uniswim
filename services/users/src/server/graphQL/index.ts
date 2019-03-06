@@ -1,4 +1,4 @@
-import { compileSchema } from "typegql";
+import { compileSchema } from "@dadoudidou/typegql";
 import AuthSchemaRoot from "./Queries/AuthSchemaRoot";
 
 // https://github.com/prismake/typegql

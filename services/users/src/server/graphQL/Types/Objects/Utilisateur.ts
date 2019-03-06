@@ -1,4 +1,4 @@
-import { ObjectType, Field } from "typegql";
+import { ObjectType, Field } from "@dadoudidou/typegql";
 
 @ObjectType()
 export default class Utilisateur {

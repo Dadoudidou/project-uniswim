@@ -1,6 +1,6 @@
 import { GraphQLScalarType } from "graphql"
 import * as moment from "moment"
-import { ObjectType, Field } from "typegql";
+import { ObjectType, Field } from "@dadoudidou/typegql";
 
 export const GQLScalarDate = new GraphQLScalarType({
     name: "Date",

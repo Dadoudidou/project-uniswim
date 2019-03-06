@@ -1,8 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
-
-
+const NodemonPlugin = require( 'nodemon-webpack-plugin' );
 
 const config = {
     entry: './src/index.ts',
@@ -24,9 +23,10 @@ const config = {
         ]
     },
     resolve: {
+        mainFields: ['main', 'module'],
         extensions: [ '.tsx', '.ts', '.js' ],
         alias: {
-            "@config": path.join(__dirname,"src/config"),
+            "@config/*": path.join(__dirname,"src/config"),
             "@database/*": path.join(__dirname,"src/database"),
             "@domain/*": path.join(__dirname,"src/domain"),
             "@logs/*": path.join(__dirname,"src/logs"),
@@ -36,8 +36,9 @@ const config = {
     },
     externals: [ 'pg', 'sqlite3', 'tedious', 'pg-hstore'],
     plugins: [
-        new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
+        //new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
         new Dotenv(),
+        new NodemonPlugin()
     ],
     devServer: {
         contentBase: './dist'

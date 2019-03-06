@@ -1,4 +1,4 @@
-import { SchemaRoot, Query } from "typegql"
+import { SchemaRoot, Query } from "@dadoudidou/typegql"
 import Utilisateur from "../Types/Objects/Utilisateur";
 
 @SchemaRoot()
