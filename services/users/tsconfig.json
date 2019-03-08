@@ -21,7 +21,9 @@
             "@domain/*":["src/domain"],
             "@logs/*":["src/logs"],
             "@utils/*":["src/utils"],
-            "@graphQL/*":["src/server/graphQL"]
+            "@graphQL/*":["src/server/graphQL"],
+            "typegql/*":["src/libs/typegql"],
+            "ntypegql":["src/libs/ntypegql"]
         },
         "lib": ["dom", "es2018", "esnext"]
     },

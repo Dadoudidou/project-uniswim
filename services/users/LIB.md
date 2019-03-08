@@ -5,6 +5,7 @@
 ## LOG
 - winston
 - debug
+- morgan : middleware logging pour express
 
 ## Dates
 - moment
@@ -17,9 +18,11 @@
 ## Server
 - graphql : schema de l'api
 - typegql : Décorateurs pour graphql
+- express :
+- helmet : Protection des entetes http (https://expressjs.com/fr/advanced/best-practice-security.html)
 
 ## Autres
-- bcrypt : cryptage
+- bcryptjs : cryptage
 
 
 

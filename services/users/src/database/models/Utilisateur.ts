@@ -4,7 +4,7 @@ import Role from "./Role";
 import Abilite from "./Abilite";
 import UtilisateurAbilite from "./UtilisateurAbilite";
 import UtilisateurRole from "./UtilisateurRole";
-import { CryptText } from "src/utils/Crypt";
+import { CryptText } from "./../../utils/Crypt";
 
 @Table
 export default class Utilisateur extends Model<Utilisateur> {

@@ -2,7 +2,7 @@
 // https://github.com/RobinBuschmann/sequelize-typescript
 
 import { Sequelize } from "sequelize-typescript"
-import config from "@config/index";
+import config from "@config/*";
 import Abilite from "./models/Abilite";
 import Application from "./models/Application";
 import Client from "./models/Client";

@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
 const NodemonPlugin = require( 'nodemon-webpack-plugin' );
+const nodeExternals = require('webpack-node-externals');
 
 const config = {
     entry: './src/index.ts',
@@ -31,10 +32,12 @@ const config = {
             "@domain/*": path.join(__dirname,"src/domain"),
             "@logs/*": path.join(__dirname,"src/logs"),
             "@utils/*": path.join(__dirname,"src/utils"),
-            "@graphQL/*": path.join(__dirname,"src/server/graphQL")
+            "@graphQL/*": path.join(__dirname,"src/server/graphQL"),
+            "typegql": path.join(__dirname,"src/libs/typegql"),
+            "ntypegql": path.join(__dirname,"src/libs/ntypegql")
         }
     },
-    externals: [ 'pg', 'sqlite3', 'tedious', 'pg-hstore'],
+    externals: [ nodeExternals(), 'pg', 'sqlite3', 'tedious', 'pg-hstore'],
     plugins: [
         //new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
         new Dotenv(),

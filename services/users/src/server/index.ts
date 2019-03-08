@@ -1,16 +1,14 @@
 import "reflect-metadata";
 
 import serverApp from "./app";
+import logs from "@logs/*";
 
 export default async () => {
     return serverApp()
     .then(async (server) => {
-        //server.listen(server.get("port"));
-        //await server.start();
-        //server.log(null, `Serveur démarré à l'url : ${server.info.uri}`);
     })
     .catch((err) => {
-        console.log(err);
+        console.error(err);
         process.exit(err.message);
     })
 }
