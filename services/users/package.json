@@ -6,9 +6,10 @@
   "scripts": {
     "test": "jest --passWithNoTests",
     "start": "webpack -d --mode development --watch",
-    "build-dev": "webpack -d --mode development && node dist/server.js",
+    "build-dev": "webpack -d --mode development",
     "build-prod": "webpack -p --mode production",
-    "dev": "webpack-dev-server"
+    "dev": "webpack-dev-server",
+    "debug": "npm run build-dev && node --nolazy --inspect-brk=9229 dist/server.js"
   },
   "repository": {
     "type": "git",

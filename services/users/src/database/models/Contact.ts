@@ -24,12 +24,10 @@ export default class Contact extends Model<Contact> {
     actif: boolean;
 
     @Length({ max: 45 })
-    @NotNull
     @Column
     nom: string;
 
     @Length({ max: 45 })
-    @NotNull
     @Column
     prenom: string;
 

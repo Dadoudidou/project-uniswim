@@ -5,16 +5,30 @@ import Abilite from "./Abilite";
 import UtilisateurAbilite from "./UtilisateurAbilite";
 import UtilisateurRole from "./UtilisateurRole";
 import { CryptText } from "./../../utils/Crypt";
+import Client from "./Client";
 
 @Table
 export default class Utilisateur extends Model<Utilisateur> {
 
-    @PrimaryKey
     @Column
     revision_from: Date;
 
+    @BeforeCreate
+    static beforeCreateRevisionFrom(instance: Utilisateur){
+        instance.revision_from = new Date();
+    }
+    /*@BeforeUpdate
+    static beforeUpdateRevisionFrom(instance: Utilisateur){
+        instance.revision_from = new Date();
+    }*/
+
     @Column
     revision_until?: Date;
+
+    @BeforeUpdate
+    static beforeUpdateRevisionUntil(instance: Utilisateur){
+        instance.revision_until = new Date();
+    }
 
     @Column
     revision_status: string;
@@ -23,7 +37,7 @@ export default class Utilisateur extends Model<Utilisateur> {
     @Column
     revision_utilisateur_id: number;
 
-    @ForeignKey(() => Application)
+    @ForeignKey(() => Client)
     @Column
     client_id: number;
 
@@ -34,12 +48,11 @@ export default class Utilisateur extends Model<Utilisateur> {
     @Column
     password: string;
 
-    @BeforeCreate
-    static hashPassword(instance: Utilisateur){
-        CryptText(instance.password)
-        .then(textCrypted => instance.password = textCrypted)
-        .catch(err => { if(err) console.error(err) })
-    }
+    /*@BeforeCreate
+    static async hashPassword(instance: Utilisateur){
+        let textCrypted = await CryptText(instance.password);
+        instance.password = textCrypted;
+    }*/
 
     @Column
     nom: string;

@@ -1,4 +1,9 @@
-import { ObjectType, Field, InputObjectType, InputField } from "@dadoudidou/typegql";
+import { ObjectType, Field, InputObjectType, InputField, Context, Arg } from "@dadoudidou/typegql";
+import Application from "./Application";
+import { GraphQLContext } from "@graphQL/*";
+import { toObjectType } from "../../Helpers/ToObjectType";
+import { GQLScalarDate } from "../Scalars/Date";
+import Contact from "./Contact";
 
 @ObjectType()
 export default class Client {
@@ -17,5 +22,22 @@ export default class Client {
 
     @Field()
     ville: string;
+
+    @Field({ type: [Application], description: "Liste des applications" })
+    async applications(@Arg({ isNullable: true }) application_id: number, @Context ctx: GraphQLContext): Promise<Application[]> {
+        let client = await ctx.models.Client.findByPk(this.id);
+        let applications: any[] = await client.$get("applications");
+        return applications.map(x => toObjectType(Application, x));
+    }
+
+    @Field({ type: [Contact], description: "Liste des contacts" })
+    async contacts(@Arg({ isNullable: true }) contact_id: number, @Context ctx: GraphQLContext): Promise<Contact[]> {
+        let client = await ctx.models.Client.findByPk(this.id);
+        let contacts: any[] = await client.$get("contacts");
+        return contacts.map(x => toObjectType(Contact, x));
+    }
+
+    @Field({ type: GQLScalarDate })
+    date_created_gmt: Date;
 }
 

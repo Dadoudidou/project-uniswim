@@ -14,6 +14,7 @@ import RoleAbilite from "./models/RoleAbilite";
 import UtilisateurAbilite from "./models/UtilisateurAbilite";
 import UtilisateurRole from "./models/UtilisateurRole";
 import ResetPasswordToken from "./models/ResetPasswordToken";
+import repositories from "./repositories/index";
 
 
 
@@ -35,5 +36,6 @@ const models = {
 
 export default {
     bdd: sequelize,
-    models: models
+    models: models,
+    repos: repositories
 }

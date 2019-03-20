@@ -1,8 +1,7 @@
 import { ObjectType, Field, InputObjectType, InputField } from "@dadoudidou/typegql";
-import { GQLScalarDate } from "./../Scalars/Date"
 
 @ObjectType()
-export default class Application {
+export default class Role {
 
     @Field()
     id: number
@@ -10,7 +9,6 @@ export default class Application {
     @Field()
     nom: string;
 
-    @Field({ type: GQLScalarDate })
-    date_created_gmt: Date;
+    @Field()
+    description: string;
 }
-

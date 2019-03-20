@@ -71,7 +71,8 @@ async function createServer(){
         context: (ExpressCtx) => ({
             log: logs.logGraphQl,
             models: database.models,
-            database: database.bdd
+            database: database.bdd,
+            repos: database.repos
         })
     });
     graphQlServer.applyMiddleware({
