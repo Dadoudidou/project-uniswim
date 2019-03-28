@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import { MuiThemeProvider, CssBaseline } from '@material-ui/core';
+import { CssBaseline } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/styles';
 import { getDefaultTheme } from './Utils/Theme';
 import { RenderRoutes } from './System/Router';
 import { PluginManager } from './System/PluginManager';
@@ -19,11 +20,11 @@ class App extends Component {
   render(){
     return (
       <Fragment>
-        <CssBaseline />
         <ApolloProvider client={getApolloClient()}>
-          <MuiThemeProvider theme={getDefaultTheme()}>
+          <ThemeProvider theme={getDefaultTheme()}>
+            <CssBaseline />
             <RenderRoutes routes={PluginManager.GetInstance().loadRoutes()} />
-          </MuiThemeProvider>
+          </ThemeProvider>
         </ApolloProvider>
       </Fragment>
     )
