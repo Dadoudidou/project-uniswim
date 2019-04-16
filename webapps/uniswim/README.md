@@ -32,15 +32,15 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 - [x] `@material-ui` : librairie graphique
 - [x] `react-router-dom` : routage
-- [ ] `linq` : uilisation de linq en javascript
-- [ ] `apollo-boost` : client pour apollo
+- [x] `linq` : uilisation de linq en javascript
+- [x] `apollo-boost` : client pour apollo
    - `apollo-client`: Where all the magic happens
    - `apollo-cache-inmemory`: Our recommended cache
    - `apollo-link-http`: An Apollo Link for remote data fetching
    - `apollo-link-error`: An Apollo Link for error handling
    - `apollo-link-state`: An Apollo Link for local state management
-- [ ] `react-apollo` : wrapper apollo pour react
-- [ ] `graphql-tag` : parser les schéma GraphQL
+- [x] `react-apollo` : wrapper apollo pour react
+- [x] `graphql-tag` : parser les schéma GraphQL
 - [ ] `react-connected-transition` : animation d'éléments entre pages
 - [x] `storybook` : développement isolé de composant 
 - [x] `@storybook/addon-knobs` : Edit React props

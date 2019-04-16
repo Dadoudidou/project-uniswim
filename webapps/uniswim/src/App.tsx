@@ -8,10 +8,12 @@ import UserSystem from './Plugins/UserSystem';
 import Tests from './Plugins/Tests';
 import { ApolloProvider } from "react-apollo"
 import { getApolloClient } from './System/Store/Apollo';
+import Dashboard from './Plugins/Dashboard';
 
 //#region PLUGINS
 
 PluginManager.GetInstance().add(UserSystem);
+PluginManager.GetInstance().add(Dashboard);
 PluginManager.GetInstance().add(Tests);
 
 //#endregion

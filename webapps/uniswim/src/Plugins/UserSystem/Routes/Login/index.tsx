@@ -1,9 +1,15 @@
-import React, { Fragment } from "react"
+import React, { Fragment, useState } from "react"
 import DocumentTitle from "../../../../Components/DocumentTitle";
-import { Paper, Avatar, Typography, FormControl, InputLabel, Input, Button, StyleRulesCallback, withStyles, WithStyles, TextField, OutlinedInput } from "@material-ui/core";
+import { Paper, Avatar, Typography, FormControl, InputLabel, Input, Button, StyleRulesCallback, withStyles, WithStyles, TextField, OutlinedInput, CircularProgress } from "@material-ui/core";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { compose, graphql } from "react-apollo";
+import {LoginMutationData, LoginMutationVariables, LoginMutation, CurrentCredentialQuery } from "../../Queries";
+import mutatable, { WithMutatable } from "../../../../System/Store/Apollo/mutatable";
+import { createCookie } from "../../Utils";
+import { RouteComponentProps } from "react-router";
+import { queryVariableParse, getHistory } from "../../../../System/Router";
 
-type classkey = "main" | "paper" | "avatar" | "form" | "submit"
+type classkey = "main" | "paper" | "avatar" | "form" | "submit" | "avatarWrapper" | "progressBar"
 
 const styles: StyleRulesCallback<classkey> = theme => ({
     main: {
@@ -36,26 +42,61 @@ const styles: StyleRulesCallback<classkey> = theme => ({
     },
     submit: {
         marginTop: theme.spacing(3),
+    },
+    avatarWrapper: {
+        position: 'relative',
+    },
+    progressBar: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        zIndex: 1,
+        width: theme.spacing(12),
+        height: theme.spacing(12)
     }
 })
 
-const Login = withStyles<classkey>(styles)((props: WithStyles<classkey>) => {
+type props = {
+    login: WithMutatable<LoginMutationData, LoginMutationVariables>
+} & WithStyles<classkey> & RouteComponentProps
+
+const Login = (props: props) => {
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
     return (
         <Fragment>
             <DocumentTitle title="Login Page" />
             <main className={props.classes.main}>
                 <Paper className={props.classes.paper}>
-                    <Avatar className={props.classes.avatar}>
-                        <LockOutlinedIcon />
-                    </Avatar>
-                    <form className={props.classes.form}>
+                    <div className={props.classes.avatarWrapper}>
+                        <Avatar className={props.classes.avatar}>
+                            <LockOutlinedIcon />
+                        </Avatar>
+                        {props.login.loading && <CircularProgress size="" thickness={2}  className={props.classes.progressBar} />}
+                    </div>
+                    <form className={props.classes.form} 
+                        onSubmit={async (ev) => {
+                            let data = await props.login.submit(ev, { email, password });
+                            if(!data.errors){
+                                await createCookie(data.data.createCredential);
+                                let _parseUri = queryVariableParse(props.history.location);
+                                let _return_url = _parseUri["r"];
+                                if(_return_url){
+                                    props.history.push(_return_url);
+                                }
+                            }
+                        }}>
+                        {props.login.error && <Typography color="error">{props.login.error}</Typography>}
                         <TextField 
+                            type="email"
                             margin="normal"
                             fullWidth
                             required
                             label="Courriel"
                             autoFocus
                             autoComplete="email"
+                            value={email}
+                            onChange={ev => setEmail(ev.target.value)}
                         />
                         <TextField 
                             type="password"
@@ -64,6 +105,8 @@ const Login = withStyles<classkey>(styles)((props: WithStyles<classkey>) => {
                             fullWidth
                             required
                             label="Mot de passe"
+                            value={password}
+                            onChange={ev => setPassword(ev.target.value)}
                         />
                         <Button type="submit" fullWidth variant="contained" color="primary" className={props.classes.submit}>
                             Se connecter
@@ -73,7 +116,28 @@ const Login = withStyles<classkey>(styles)((props: WithStyles<classkey>) => {
             </main>
         </Fragment>
     )
-})
-Login.displayName = "Login"
+};
+Login.displayName = "Login";
 
-export default Login;
+
+export default compose(
+    graphql(LoginMutation, { name: "login" }),
+    mutatable<LoginMutationData, LoginMutationVariables>({ 
+        mutationName: "login",
+        options: {
+            update: (proxy, { data }) => {
+                // -- store credentials in cache
+                if(data && data.createCredential){
+                    const credential = {
+                        token: data.createCredential, 
+                        __typename: 'credential'
+                    };
+                    proxy.writeQuery({
+                        query: CurrentCredentialQuery, 
+                        data: { credential }
+                    });
+                }
+            },
+        }
+    })
+)(withStyles<classkey>(styles)(Login));

@@ -2,12 +2,21 @@ import { LiteEvent, ILiteEvent } from "@dadoudidou/liteevent"
 import { RouteProps } from "react-router";
 import merge from "lodash.merge";
 import { appendLocalState } from "../Store/Apollo";
+import { Linq } from "..";
 
+
+export type MenuItem = {
+    element?: React.ReactNode
+    link_text?: string
+    link?: string
+    order?: number
+}
 
 
 export type IPlugin = {
     name: string
     loadRoutes?: () => React.ReactElement<RouteProps>[]
+    loadMenus?: () => MenuItem[]
 }
 
 type PluginManagerEventName = "AddPlugin" | "RemovePlugin"
@@ -73,6 +82,22 @@ export class PluginManager {
             }
         });
         return _routes;
+    }
+
+    loadMenus(): MenuItem[]{
+        let _menus: MenuItem[] = [];
+        this.__plugins.forEach(x => {
+            if(x.loadMenus){
+                _menus = [
+                    ..._menus,
+                    ...x.loadMenus()
+                ];
+            }
+        });
+        _menus = Linq.from(_menus)
+            .orderBy(x => x.order || 1000)
+            .toArray();
+        return _menus;
     }
 
 }

@@ -19,8 +19,8 @@ const LinkErrors = onError(({ graphQLErrors, networkError }) => {
 });
 
 const LinkHttp = new HttpLink({
-    uri: 'https://w5xlvm3vzz.lp.gql.zone/graphql',
-    credentials: 'same-origin'
+    uri: `${process.env.REACT_APP_USERS_BASEURL}/api/graphql`,
+    //credentials: 'same-origin'
 });
 
 const LinkState = withClientState({
@@ -30,13 +30,19 @@ const LinkState = withClientState({
 
 const link = ApolloLink.from([
     LinkErrors,
-    LinkState
+    LinkState,
+    LinkHttp
 ]);
 
 const client = new ApolloClient({
     cache,
     link, 
-    connectToDevTools: true
+    connectToDevTools: true,
+    defaultOptions: {
+        mutate: {
+            errorPolicy: "all"
+        }
+    }
 });
 
 
