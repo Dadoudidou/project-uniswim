@@ -3,6 +3,7 @@ import AuthSchemaRoot from "./SchemaRoots/AuthSchemaRoot";
 import database from "@database/*";
 import ClientSchemaRoot from "./SchemaRoots/ClientSchemaRoot";
 import ApplicationSchemaRoot from "./SchemaRoots/ApplicationSchemaRoot";
+import ServerSchemaRoot from "./SchemaRoots/ServerSchemaRoot";
 
 
 export type GraphQLContext = {
@@ -16,7 +17,8 @@ const finalSchema = compileSchema({
     roots: [
         AuthSchemaRoot,
         ClientSchemaRoot,
-        ApplicationSchemaRoot
+        ApplicationSchemaRoot,
+        ServerSchemaRoot
     ]
 });
 

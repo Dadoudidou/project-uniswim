@@ -1,28 +1,39 @@
-import { SchemaRoot, Query, Context, Mutation } from "@dadoudidou/typegql"
+import { SchemaRoot, Query, Context, Mutation, Arg } from "@dadoudidou/typegql"
 import Utilisateur from "../Types/Objects/Utilisateur";
 import { GraphQLContext } from "@graphQL/*";
+import * as jwt from "jsonwebtoken"
+import config from "@config/*";
+import errors from "@errors/*";
+import { AuthenticationError } from "apollo-server-core";
+import { GraphQLString, GraphQLBoolean } from "graphql";
+import { CheckCryptText, CryptText } from "./../../../utils/Crypt";
+
+import * as bcrypt from "bcryptjs"
 
 @SchemaRoot()
 export default class AuthSchemaRoot {
     
-    @Query({
-        description: "Authentifie un utilisateur et retourne un token si l'authentification est réussie",
-    })
-    auth(username: string, password: string): string {
-        return "";
-    }
-
-    @Query({
-        description: "Récupère les informations de l'utilisateur à l'aide d'un token"
-    })
-    authToken(token: string): Utilisateur {
-        return null;
-    }
-
     @Mutation({
-        description: "Enregistre un utilisateur et retourne un token si l'enregistrement est réussi"
+        description: "Authentifie un utilisateur et retourne un token si l'authentification est réussie",
+        type: GraphQLString
     })
-    register(username: string, password: string, @Context ctx: GraphQLContext): string {
-        return "";
+    async createCredential(
+        email: string, 
+        password: string, 
+        @Arg({ isNullable:true, description: "Nombre de secondes après lequel le token expire. [1 jour par défaut]" })expiresIn: number, 
+        @Context ctx: GraphQLContext): Promise<string> {
+
+        let _user = await ctx.repos.utilisateur.CheckUtitlisateur(email, password);
+        if(!_user){
+            throw new AuthenticationError("Email ou mot de passe incorrect.")
+        }
+        const user = {
+            id: _user.id,
+        }
+        const token = jwt.sign(user, config.jwt.secret, {
+            expiresIn: expiresIn | 86400
+        });
+        return token;
     }
+    
 }

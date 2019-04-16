@@ -11,6 +11,13 @@ type config = {
     server: {
         port: number
     }
+    jwt: {
+        secret: string
+    },
+    cookie: {
+        key : string
+        secret_key: string
+    }
 }
 
 const config: config = {
@@ -27,6 +34,13 @@ const config: config = {
     },
     server: {
         port: 8080
+    },
+    jwt: {
+        secret: nconf.get("jwt_secret_key")
+    },
+    cookie: {
+        key: nconf.get("cookie_key"),
+        secret_key: nconf.get("cookie_secret_key")
     }
 }
 

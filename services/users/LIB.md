@@ -23,6 +23,7 @@
 
 ## Autres
 - bcryptjs : cryptage
+- jsonwebtoken : JWT Token
 
 
 

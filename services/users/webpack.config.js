@@ -33,6 +33,7 @@ const config = {
             "@logs/*": path.join(__dirname,"src/logs"),
             "@utils/*": path.join(__dirname,"src/utils"),
             "@graphQL/*": path.join(__dirname,"src/server/graphQL"),
+            "@errors/*": path.join(__dirname,"src/server/errors"),
             "typegql": path.join(__dirname,"src/libs/typegql"),
             "ntypegql": path.join(__dirname,"src/libs/ntypegql")
         }

@@ -29,9 +29,7 @@ CREATE TABLE IF NOT EXISTS `abilite` (
   `application_id` int(11) NOT NULL,
   `nom` varchar(45) NOT NULL,
   `description` text NOT NULL,
-  `actions` varchar(45) NOT NULL,
-  `sujets` varchar(45) NOT NULL,
-  `conditions` text,
+  `template` JSON
   PRIMARY KEY (`id`),
   KEY `fk_application_id_idx` (`application_id`),
   CONSTRAINT `fk_abilite_application_id` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION

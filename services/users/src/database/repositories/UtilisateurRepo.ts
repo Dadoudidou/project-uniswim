@@ -3,7 +3,7 @@ import Utilisateur from "../models/Utilisateur";
 import database from "@database/*";
 import Client from "../models/Client";
 import { GetClient } from "./ClientRepo";
-import { CryptText } from "./../../utils/Crypt";
+import { CryptText, CheckCryptText } from "./../../utils/Crypt";
 import { FilteredModelAttributes } from "sequelize-typescript/lib/models/Model";
 
 
@@ -62,4 +62,17 @@ export const UpdateUtilisateur = async (client_id: number, user_id: number, util
     }) as any;
 
     return _nuser;
+}
+
+export const CheckUtitlisateur = async (email: string, password: string): Promise<Utilisateur> => {
+    let _user = await database.models.Utilisateur.find({
+        where: {
+            email: email,
+            revision_until: null
+        }
+    });
+    if(!_user) return _user;
+    let _passwordIsGood = await CheckCryptText(_user.password, password);
+    if(_passwordIsGood) return _user;
+    return null;
 }

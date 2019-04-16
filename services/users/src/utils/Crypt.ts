@@ -13,8 +13,9 @@ export const CryptText = (password: string): Promise<string> => {
 }
 
 export const CheckCryptText = (textCrypted: string, textNonCrypted: string): Promise<boolean> => {
+    console.log(textCrypted, textNonCrypted);
     return new Promise<boolean>((resolve, reject) => {
-        bcrypt.compare(textCrypted, textNonCrypted, (err, same) => {
+        bcrypt.compare(textNonCrypted, textCrypted, (err, same) => {
             if(err) reject(err);
             resolve(same);
         })
