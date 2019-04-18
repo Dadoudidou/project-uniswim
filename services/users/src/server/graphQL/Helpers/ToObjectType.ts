@@ -8,5 +8,4 @@ export function toObjectType<T>(Type: new (...args: any[]) => T, object: any) : 
     }
 
     return _newClass;
-	return Object.assign(new Type(), object);
 }

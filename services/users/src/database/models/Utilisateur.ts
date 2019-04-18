@@ -4,7 +4,6 @@ import Role from "./Role";
 import Abilite from "./Abilite";
 import UtilisateurAbilite from "./UtilisateurAbilite";
 import UtilisateurRole from "./UtilisateurRole";
-import { CryptText } from "./../../utils/Crypt";
 import Client from "./Client";
 
 @Table
@@ -39,7 +38,7 @@ export default class Utilisateur extends Model<Utilisateur> {
 
     @ForeignKey(() => Client)
     @Column
-    client_id: number;
+    client_id: number
 
     @Column
     login: string;
@@ -68,5 +67,8 @@ export default class Utilisateur extends Model<Utilisateur> {
 
     @BelongsToMany(() => Role, () => UtilisateurRole)
     roles: Role[]
+
+    @BelongsTo(() => Client)
+    client: Client
 }
 

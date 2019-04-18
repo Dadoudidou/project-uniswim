@@ -8,6 +8,7 @@ import UtilisateurInput from "../Types/Inputs/UtilisateurInput";
 import Utilisateur from "../Types/Objects/Utilisateur";
 import Contact from "../Types/Objects/Contact";
 import ContactInput from "../Types/Inputs/ContactInput";
+import { AuthenticatedHook } from "../Hooks/index";
 
 @ObjectType()
 class UtilisateurMutation {
@@ -208,6 +209,16 @@ export default class ClientSchemaRoot {
         )
     }
 
+    @AuthenticatedHook()
+    @Query({ type: Utilisateur , description: "Récupère les informations d'un utilisateur"})
+    async Utilisateur(id: number, @Context ctx: GraphQLContext): Promise<Utilisateur> {
+        let _users = await ctx.repos.utilisateur.GetUtilisateurs({ id });
+        if(_users.length == 0) throw new Error(`Utilisateur with ${id} not found`);
+        return toObjectType(
+            Utilisateur, 
+            _users[0]
+        )
+    }
     
 }
 

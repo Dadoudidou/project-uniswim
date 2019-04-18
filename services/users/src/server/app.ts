@@ -13,6 +13,7 @@ import * as cookieParser  from "cookie-parser";
 import * as BodyParser from "body-parser"
 import * as jwt from "jsonwebtoken"
 import { defineAbilitiesForUser } from "./../utils/Abilities";
+import { ExpressContext } from "apollo-server-express/dist/ApolloServer";
 
 
 async function createServer(){
@@ -25,7 +26,9 @@ async function createServer(){
     // -- configuration
     app.set("port", config.server.port);
 
-    
+    // -- connect to database
+    await database.bdd.authenticate()
+    logs.logExpress.info("Connexion à la base de donnée établie");
 
     // -- cookies
     app.use(cookieParser(config.cookie.secret_key));
@@ -58,8 +61,9 @@ async function createServer(){
         //resolvers: Resolvers,
         debug: true,
         uploads: true,
-        context: async ({ req, res }) => {
+        context: async (expressContext) => {
             
+            let req = expressContext.req as Express.Request;
             let token: string = null;
             let userContext: UserContext = null;
 
@@ -68,9 +72,18 @@ async function createServer(){
             if(req.signedCookies && req.signedCookies[config.cookie.key]){
                 token = req.signedCookies[config.cookie.key];
             }
-            // ---- authentification via token
+            // ---- authentification via httpheader
+            let authHeader = req.header("authorization");
+            if(authHeader){
+                let _split =authHeader.split(" "); 
+                let _type = _split[0];
+                switch(_type.toUpperCase()){
+                    case "JWT" : 
+                        if(_split.length >= 1) token = _split[1];
+                        break;
+                }
+            }
 
-            
             if(token){
                 // -- TEST CACHE ou REQUETE BDD
 
@@ -82,12 +95,18 @@ async function createServer(){
                 } catch(err){
                     throw new AuthenticationError("Token de connexion invalide");
                 }
+                let _users = await database.repos.utilisateur.GetUtilisateurs({ id: userJwt.id, client_id: userJwt.client_id });
+                if(_users.length == 0) throw new AuthenticationError("Token de connexion invalide");
+                let _user = _users[0];
+
                 // -- create user context
-                userContext.id = userJwt.id;
-                userContext.token = token;
-                let _client = await database.repos.client.GetClient(userJwt.id);
-                userContext.entity = await database.repos.utilisateur.GetUtilisateurFromClient(_client, { id:userJwt.id });
-                userContext.ability = await defineAbilitiesForUser(userContext.entity);
+                userContext = {
+                    id: userJwt.id,
+                    token: token,
+                    entity: _user,
+                    ability: await defineAbilitiesForUser(_user)
+                };
+
             }
 
             return {
@@ -195,7 +214,7 @@ async function createServer(){
     });
 
     // -- ecoute du port
-    app.listen(app.get("port"), () => {
+    app.listen(app.get("port"), async () => {
         logs.logExpress.info(`Server listening on port ${app.get('port')}`);
     });
 

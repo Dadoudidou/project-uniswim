@@ -80,13 +80,14 @@ CREATE TABLE IF NOT EXISTS `utilisateur` (
   `nom` varchar(45) NOT NULL,
   `prenom` varchar(45) DEFAULT NULL,
   `email` varchar(45) NOT NULL,
+  `password` varchar(255) NOT NULL,
   PRIMARY KEY (`id`,`revision_from`,`client_id`),
   KEY `in_revision_until` (`revision_until`),
-  KEY `fk_utilisateur_client_id_idx` (`client_id`),
   KEY `fk_utilisateur_revision_utilisateur_id_idx` (`revision_utilisateur_id`),
+  KEY `fk_utilisateur_client_id_idx` (`client_id`),
   CONSTRAINT `fk_utilisateur_client_id` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_utilisateur_revision_utilisateur_id` FOREIGN KEY (`revision_utilisateur_id`) REFERENCES `utilisateur` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `utilisateur_role` (
   `utilisateur_id` int(11) NOT NULL,
