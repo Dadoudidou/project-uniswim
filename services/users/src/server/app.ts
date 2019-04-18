@@ -1,7 +1,7 @@
 import * as Express from "express"
-import { ApolloServer, gql } from "apollo-server-express"
+import { ApolloServer, gql, AuthenticationError } from "apollo-server-express"
 import config from "@config/*";
-import graphQL from "./graphQL";
+import graphQL, { UserContext } from "./graphQL";
 import logs from "@logs/*";
 import LogErrors from "./middlewares/LogErrors";
 import ClientErrorHandler from "./middlewares/ClientErrorHandler";
@@ -12,6 +12,7 @@ import database from "@database/*";
 import * as cookieParser  from "cookie-parser";
 import * as BodyParser from "body-parser"
 import * as jwt from "jsonwebtoken"
+import { defineAbilitiesForUser } from "./../utils/Abilities";
 
 
 async function createServer(){
@@ -57,12 +58,46 @@ async function createServer(){
         //resolvers: Resolvers,
         debug: true,
         uploads: true,
-        context: (ExpressCtx) => ({
-            log: logs.logGraphQl,
-            models: database.models,
-            database: database.bdd,
-            repos: database.repos
-        })
+        context: async ({ req, res }) => {
+            
+            let token: string = null;
+            let userContext: UserContext = null;
+
+            // -- récupération du token
+            // ---- authentification via cookie
+            if(req.signedCookies && req.signedCookies[config.cookie.key]){
+                token = req.signedCookies[config.cookie.key];
+            }
+            // ---- authentification via token
+
+            
+            if(token){
+                // -- TEST CACHE ou REQUETE BDD
+
+                let userJwt: { id: number, client_id: number } = null;
+                // -- test du token
+                try {
+                    userJwt = jwt.verify(token, config.jwt.secret) as { id:number, client_id: number };
+                    if(userJwt && !userJwt.id) throw new AuthenticationError("Token de connexion invalide");
+                } catch(err){
+                    throw new AuthenticationError("Token de connexion invalide");
+                }
+                // -- create user context
+                userContext.id = userJwt.id;
+                userContext.token = token;
+                let _client = await database.repos.client.GetClient(userJwt.id);
+                userContext.entity = await database.repos.utilisateur.GetUtilisateurFromClient(_client, { id:userJwt.id });
+                userContext.ability = await defineAbilitiesForUser(userContext.entity);
+            }
+
+            return {
+                log: logs.logGraphQl,
+                models: database.models,
+                database: database.bdd,
+                repos: database.repos,
+                user: userContext
+            };
+        }
     });
     graphQlServer.applyMiddleware({
         app: app,

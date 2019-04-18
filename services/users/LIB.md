@@ -24,6 +24,7 @@
 ## Autres
 - bcryptjs : cryptage
 - jsonwebtoken : JWT Token
+- @casl/ability : check permissions -- https://stalniy.github.io/casl/
 
 
 

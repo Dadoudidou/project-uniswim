@@ -17,16 +17,8 @@ export default class Abilite extends Model<Abilite> {
     @Column(DataType.TEXT)
     description: string;
 
-    @Length({ max: 45 })
-    @Column
-    actions: string;
-
-    @Length({ max: 45 })
-    @Column
-    sujets: string;
-
     @Column(DataType.TEXT)
-    conditions: string;
+    template: string;
 
     @BelongsTo(() => Application)
     application: Application

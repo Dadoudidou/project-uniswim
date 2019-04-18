@@ -29,6 +29,7 @@ export default class AuthSchemaRoot {
         }
         const user = {
             id: _user.id,
+            client_id: _user.client_id
         }
         const token = jwt.sign(user, config.jwt.secret, {
             expiresIn: expiresIn | 86400
