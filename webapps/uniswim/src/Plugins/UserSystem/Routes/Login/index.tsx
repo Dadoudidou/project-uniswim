@@ -80,7 +80,7 @@ const Login = (props: props) => {
                             if(!data.errors){
                                 await createCookie(data.data.createCredential);
                                 let _parseUri = queryVariableParse(props.history.location);
-                                let _return_url = _parseUri["r"];
+                                let _return_url = _parseUri && _parseUri["r"];
                                 if(_return_url){
                                     props.history.push(_return_url);
                                 }
