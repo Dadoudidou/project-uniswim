@@ -1,7 +1,7 @@
 import * as Express from "express"
 import { ApolloServer, gql, AuthenticationError } from "apollo-server-express"
 import config from "@config/*";
-import graphQL, { UserContext } from "./graphQL";
+import graphQL, { UserContext, UserContextCache } from "./graphQL";
 import logs from "@logs/*";
 import LogErrors from "./middlewares/LogErrors";
 import ClientErrorHandler from "./middlewares/ClientErrorHandler";
@@ -14,6 +14,8 @@ import * as BodyParser from "body-parser"
 import * as jwt from "jsonwebtoken"
 import { defineAbilitiesForUser } from "./../utils/Abilities";
 import { ExpressContext } from "apollo-server-express/dist/ApolloServer";
+import { Cache } from "@cache/*";
+import { Ability } from "@casl/ability";
 
 
 async function createServer(){
@@ -84,28 +86,48 @@ async function createServer(){
                 }
             }
 
+
             if(token){
                 // -- TEST CACHE ou REQUETE BDD
+                let userContextCache = await Cache.get<UserContextCache>(token);
+                if(!userContextCache){
 
-                let userJwt: { id: number, client_id: number } = null;
-                // -- test du token
-                try {
-                    userJwt = jwt.verify(token, config.jwt.secret) as { id:number, client_id: number };
-                    if(userJwt && !userJwt.id) throw new AuthenticationError("Token de connexion invalide");
-                } catch(err){
-                    throw new AuthenticationError("Token de connexion invalide");
+                    let userJwt: { id: number, client_id: number } = null;
+                    // -- test du token
+                    try {
+                        userJwt = jwt.verify(token, config.jwt.secret) as { id:number, client_id: number };
+                        if(userJwt && !userJwt.id) throw new AuthenticationError("Token de connexion invalide");
+                    } catch(err){
+                        throw new AuthenticationError("Token de connexion invalide");
+                    }
+                    let _users = await database.repos.utilisateur.GetUtilisateurs({ id: userJwt.id, client_id: userJwt.client_id });
+                    if(_users.length == 0) throw new AuthenticationError("Token de connexion invalide");
+                    let _user = _users[0];
+
+                    // -- create user context
+                    userContext = {
+                        id: userJwt.id,
+                        token: token,
+                        //entity: _user,
+                        ability: await defineAbilitiesForUser(_user)
+                    };
+
+                    // -- store context in cache
+                    let _userContextCache: UserContextCache = {
+                        id: userContext.id,
+                        token: userContext.token,
+                        abilityRules: userContext.ability.rules
+                    }
+                    Cache.set(token, _userContextCache, 1 * 60);
+
+                } else {
+                    // -- create user context from cache
+                    userContext = {
+                        id: userContextCache.id,
+                        token: userContextCache.token,
+                        ability: new Ability(userContextCache.abilityRules)
+                    }
                 }
-                let _users = await database.repos.utilisateur.GetUtilisateurs({ id: userJwt.id, client_id: userJwt.client_id });
-                if(_users.length == 0) throw new AuthenticationError("Token de connexion invalide");
-                let _user = _users[0];
-
-                // -- create user context
-                userContext = {
-                    id: userJwt.id,
-                    token: token,
-                    entity: _user,
-                    ability: await defineAbilitiesForUser(_user)
-                };
 
             }
 

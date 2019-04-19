@@ -21,6 +21,7 @@
             "@domain/*":["src/domain"],
             "@logs/*":["src/logs"],
             "@utils/*":["src/utils"],
+            "@cache/*":["src/cache"],
             "@graphQL/*":["src/server/graphQL"],
             "@errors/*":["src/server/errors"],
             "typegql/*":["src/libs/typegql"],

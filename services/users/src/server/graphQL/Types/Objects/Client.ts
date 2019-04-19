@@ -25,15 +25,15 @@ export default class Client {
 
     @Field({ type: [Application], description: "Liste des applications" })
     async applications(@Arg({ isNullable: true }) application_id: number, @Context ctx: GraphQLContext): Promise<Application[]> {
-        let client = await ctx.models.Client.findByPk(this.id);
-        let applications: any[] = await client.$get("applications");
+        //let client = await ctx.models.Client.findByPk(this.id);
+        //let applications: any[] = await client.$get("applications");
+        let applications: any[] = await ctx.models.Application.findAll({ include:[{ model:ctx.models.Client, where: { id: this.id } }] });
         return applications.map(x => toObjectType(Application, x));
     }
 
     @Field({ type: [Contact], description: "Liste des contacts" })
     async contacts(@Arg({ isNullable: true }) contact_id: number, @Context ctx: GraphQLContext): Promise<Contact[]> {
-        let client = await ctx.models.Client.findByPk(this.id);
-        let contacts: any[] = await client.$get("contacts");
+        let contacts: any[] = await ctx.models.Contact.findAll({ where: { client_id: this.id } });
         return contacts.map(x => toObjectType(Contact, x));
     }
 

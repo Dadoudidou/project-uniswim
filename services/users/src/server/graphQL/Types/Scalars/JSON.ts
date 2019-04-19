@@ -2,7 +2,7 @@ import { GraphQLScalarType } from "graphql"
 
 export const GQLScalarJSON = new GraphQLScalarType({
     name: "JSON",
-    serialize: (value: string) => { return JSON.parse(value); },
-    parseValue: (value) => { return JSON.stringify(value); },
+    serialize: (value: any) => { return JSON.stringify(value); },
+    parseValue: (value) => { return JSON.parse(value); },
     parseLiteral: () => null
 })

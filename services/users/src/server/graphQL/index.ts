@@ -4,13 +4,19 @@ import database from "@database/*";
 import ClientSchemaRoot from "./SchemaRoots/ClientSchemaRoot";
 import ApplicationSchemaRoot from "./SchemaRoots/ApplicationSchemaRoot";
 import ServerSchemaRoot from "./SchemaRoots/ServerSchemaRoot";
-import { Ability } from "@casl/ability"
+import { Ability, RawRule } from "@casl/ability"
 import Utilisateur from "./../../database/models/Utilisateur";
+
+export type UserContextCache = {
+    id: number
+    token: string
+    abilityRules: RawRule[]
+}
 
 export type UserContext = {
     id: number
     token: string
-    entity: Utilisateur
+    entity?: Utilisateur
     ability: Ability
 }
 
