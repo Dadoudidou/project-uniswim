@@ -69,25 +69,24 @@ CREATE TABLE IF NOT EXISTS `contact` (
   CONSTRAINT `fk_contact_client_id` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `utilisateur` (
+CREATE TABLE `utilisateur` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `revision_from` datetime NOT NULL,
-  `revision_until` datetime DEFAULT NULL,
-  `revision_status` varchar(10) DEFAULT NULL,
-  `revision_utilisateur_id` int(11) DEFAULT NULL,
-  `client_id` int(11) NOT NULL,
-  `login` varchar(45) DEFAULT NULL,
   `nom` varchar(45) NOT NULL,
   `prenom` varchar(45) DEFAULT NULL,
   `email` varchar(45) NOT NULL,
   `password` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`,`revision_from`,`client_id`),
-  KEY `in_revision_until` (`revision_until`),
-  KEY `fk_utilisateur_revision_utilisateur_id_idx` (`revision_utilisateur_id`),
-  KEY `fk_utilisateur_client_id_idx` (`client_id`),
-  CONSTRAINT `fk_utilisateur_client_id` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_utilisateur_revision_utilisateur_id` FOREIGN KEY (`revision_utilisateur_id`) REFERENCES `utilisateur` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email_UNIQUE` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `client_utilisateur` (
+  `client_id` int(11) NOT NULL,
+  `utilisateur_id` int(11) NOT NULL,
+  PRIMARY KEY (`client_id`,`utilisateur_id`),
+  KEY `fk_client_utilisateur_utilisateur_id_idx` (`utilisateur_id`),
+  CONSTRAINT `fk_client_utilisateur_client_id` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_client_utilisateur_utilisateur_id` FOREIGN KEY (`utilisateur_id`) REFERENCES `utilisateur` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `utilisateur_role` (
   `utilisateur_id` int(11) NOT NULL,

@@ -4,6 +4,7 @@ import { GraphQLContext } from "@graphQL/*";
 import { toObjectType } from "../../Helpers/ToObjectType";
 import { GQLScalarDate } from "../Scalars/Date";
 import Contact from "./Contact";
+import Utilisateur from "./Utilisateur";
 
 @ObjectType()
 export default class Client {
@@ -35,6 +36,12 @@ export default class Client {
     async contacts(@Arg({ isNullable: true }) contact_id: number, @Context ctx: GraphQLContext): Promise<Contact[]> {
         let contacts: any[] = await ctx.models.Contact.findAll({ where: { client_id: this.id } });
         return contacts.map(x => toObjectType(Contact, x));
+    }
+
+    @Field({ type: () => [Utilisateur], description: "Liste des utilisateurs" })
+    async utilisateurs(@Arg({ isNullable: true }) utilisateur_id: number, @Context ctx: GraphQLContext): Promise<Utilisateur[]> {
+        let utilisateurs: any[] = await ctx.models.Utilisateur.findAll({ include:[{ model:ctx.models.Client, where: { id: this.id } }] });
+        return utilisateurs.map(x => toObjectType(Utilisateur, x));
     }
 
     @Field({ type: GQLScalarDate })

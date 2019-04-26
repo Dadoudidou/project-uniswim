@@ -5,43 +5,10 @@ import Abilite from "./Abilite";
 import UtilisateurAbilite from "./UtilisateurAbilite";
 import UtilisateurRole from "./UtilisateurRole";
 import Client from "./Client";
+import ClientUtilisateur from "./ClientUtilisateur";
 
 @Table
 export default class Utilisateur extends Model<Utilisateur> {
-
-    @Column
-    revision_from: Date;
-
-    @BeforeCreate
-    static beforeCreateRevisionFrom(instance: Utilisateur){
-        instance.revision_from = new Date();
-    }
-    /*@BeforeUpdate
-    static beforeUpdateRevisionFrom(instance: Utilisateur){
-        instance.revision_from = new Date();
-    }*/
-
-    @Column
-    revision_until?: Date;
-
-    @BeforeUpdate
-    static beforeUpdateRevisionUntil(instance: Utilisateur){
-        instance.revision_until = new Date();
-    }
-
-    @Column
-    revision_status: string;
-
-    @ForeignKey(() => Utilisateur)
-    @Column
-    revision_utilisateur_id: number;
-
-    @ForeignKey(() => Client)
-    @Column
-    client_id: number
-
-    @Column
-    login: string;
 
     @Length({max:255})
     @Column
@@ -59,7 +26,7 @@ export default class Utilisateur extends Model<Utilisateur> {
     @Column
     prenom: string;
 
-    @Column
+    @Column({ unique: true })
     email: string;
 
     @BelongsToMany(() => Abilite, () => UtilisateurAbilite)
@@ -68,7 +35,7 @@ export default class Utilisateur extends Model<Utilisateur> {
     @BelongsToMany(() => Role, () => UtilisateurRole)
     roles: Role[]
 
-    @BelongsTo(() => Client)
-    client: Client
+    @BelongsToMany(() => Client, () => ClientUtilisateur)
+    clients: Client[]
 }
 

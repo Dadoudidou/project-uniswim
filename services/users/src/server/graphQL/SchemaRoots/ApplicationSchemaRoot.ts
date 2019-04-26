@@ -1,6 +1,6 @@
 import { SchemaRoot, Query, Context, ObjectType, Mutation, InputField, Field, Arg, After  } from "@dadoudidou/typegql"
 import { GraphQLContext } from "@graphQL/*";
-import { toObjectType } from "../Helpers/ToObjectType";
+import { toObjectType, toObjectTypeArray } from "../Helpers/ToObjectType";
 import Application from "../Types/Objects/Application";
 import ApplicationInput from "../Types/Inputs/ApplicationInput";
 import { GraphQLBoolean } from "graphql";
@@ -8,6 +8,7 @@ import RoleInput from "../Types/Inputs/RoleInput";
 import Role from "../Types/Objects/Role";
 import AbiliteInput from "../Types/Inputs/AbiliteInput";
 import Abilite from "../Types/Objects/Abilite";
+import { CanHook, AuthenticatedHook } from "../Hooks/index";
 
 @ObjectType()
 class RoleMutation {
@@ -138,6 +139,8 @@ export class ApplicationMutation {
 @SchemaRoot()
 export default class ApplicationSchemaRoot {
     
+    @AuthenticatedHook()
+    @CanHook("manage", "all")
     @Mutation({ type: Application, description: "Crée une nouvelle application" })
     async createApplication(data: ApplicationInput, @Context ctx: GraphQLContext): Promise<Application> {
         return toObjectType(
@@ -146,11 +149,15 @@ export default class ApplicationSchemaRoot {
         );
     }
 
+    @AuthenticatedHook()
+    @CanHook("manage", "all")
     @Mutation()
     applicationMutate(id: number, @Context ctx: GraphQLContext): ApplicationMutation {
         return new ApplicationMutation(id);
     }
 
+    @AuthenticatedHook()
+    @CanHook("manage", "all")
     @Query({ type: Application , description: "Récupère les informations d'une application"})
     async application(id: number, @Context ctx: GraphQLContext): Promise<Application> {
         return toObjectType(
@@ -163,6 +170,15 @@ export default class ApplicationSchemaRoot {
         )
     }
 
+    @AuthenticatedHook()
+    @CanHook("manage", "all")
+    @Query({ type: [Application] , description: "Liste les applications"})
+    async applications(@Context ctx: GraphQLContext): Promise<Application[]> {
+        return toObjectTypeArray(
+            Application, 
+            await ctx.models.Application.findAll()
+        )
+    }
     
 }
 

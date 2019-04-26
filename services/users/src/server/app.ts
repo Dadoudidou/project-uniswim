@@ -92,15 +92,15 @@ async function createServer(){
                 let userContextCache = await Cache.get<UserContextCache>(token);
                 if(!userContextCache){
 
-                    let userJwt: { id: number, client_id: number } = null;
+                    let userJwt: { id: number } = null;
                     // -- test du token
                     try {
-                        userJwt = jwt.verify(token, config.jwt.secret) as { id:number, client_id: number };
+                        userJwt = jwt.verify(token, config.jwt.secret) as { id:number };
                         if(userJwt && !userJwt.id) throw new AuthenticationError("Token de connexion invalide");
                     } catch(err){
                         throw new AuthenticationError("Token de connexion invalide");
                     }
-                    let _users = await database.repos.utilisateur.GetUtilisateurs({ id: userJwt.id, client_id: userJwt.client_id });
+                    let _users = await database.repos.utilisateur.GetUtilisateurs({ id: userJwt.id });
                     if(_users.length == 0) throw new AuthenticationError("Token de connexion invalide");
                     let _user = _users[0];
 
@@ -118,7 +118,7 @@ async function createServer(){
                         token: userContext.token,
                         abilityRules: userContext.ability.rules
                     }
-                    Cache.set(token, _userContextCache, 1 * 60);
+                    Cache.set(token, _userContextCache, 60 * 60);
 
                 } else {
                     // -- create user context from cache

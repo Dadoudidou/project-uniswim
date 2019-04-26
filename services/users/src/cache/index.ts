@@ -1,7 +1,8 @@
 import * as Flat from "flat"
 import * as Redis from "redis"
+import config from "@config/*";
 
-let _RedisClient = Redis.createClient(7001);
+let _RedisClient = Redis.createClient(config.cache.port, config.cache.host);
 
 const set = (key: string, value: { [key:string]: any }, expireInSeconds: number = undefined) => {
 

@@ -1,4 +1,5 @@
 import { ObjectType, Field, InputObjectType, InputField } from "@dadoudidou/typegql";
+import { GQLScalarJSON } from "./../Scalars/JSON"
 
 @ObjectType()
 export default class Abilite {
@@ -13,11 +14,5 @@ export default class Abilite {
     description: string;
 
     @Field()
-    actions: string;
-
-    @Field()
-    sujets: string;
-
-    @Field()
-    conditions: string;
+    template: string;
 }

@@ -1,4 +1,4 @@
-import { SchemaRoot, Query, Context, ObjectType, Mutation, InputField, Field, Arg, After  } from "@dadoudidou/typegql"
+import { SchemaRoot, Query, Context, ObjectType, Mutation, InputField, Field, Arg, After, InputObjectType  } from "@dadoudidou/typegql"
 import { GraphQLContext } from "@graphQL/*";
 import Client from "../Types/Objects/Client";
 import ClientInput from "../Types/Inputs/ClientInput";
@@ -8,7 +8,8 @@ import UtilisateurInput from "../Types/Inputs/UtilisateurInput";
 import Utilisateur from "../Types/Objects/Utilisateur";
 import Contact from "../Types/Objects/Contact";
 import ContactInput from "../Types/Inputs/ContactInput";
-import { AuthenticatedHook } from "../Hooks/index";
+import { AuthenticatedHook, CanHook } from "../Hooks/index";
+import { Linq } from "@utils/*";
 
 @ObjectType()
 class UtilisateurMutation {
@@ -54,7 +55,7 @@ class UtilisateurMutation {
     @Field({ type: Utilisateur, description: "Met à jour les informations d'un utilisateur" })
     async update(data: UtilisateurInput, @Context ctx: GraphQLContext): Promise<Utilisateur> {
 
-        let _user = await ctx.repos.utilisateur.UpdateUtilisateur(this._client_id, this._id, {
+        let _user = await ctx.repos.utilisateur.UpdateUtilisateur(this._id, {
             nom: data.nom,
             prenom: data.prenom
         });
@@ -178,9 +179,19 @@ export class ClientMutation {
     }
 }
 
+
+
+@InputObjectType()
+export class QueryUtilisateurInput {
+    @InputField()
+    id: number
+}
+
 @SchemaRoot()
 export default class ClientSchemaRoot {
     
+    @AuthenticatedHook()
+    @CanHook("manage", "all")
     @Mutation({ type: Client, description: "Crée un nouveau client" })
     async createClient(data: ClientInput, @Context ctx: GraphQLContext): Promise<Client> {
         let _client = await ctx.models.Client.create({
@@ -197,6 +208,7 @@ export default class ClientSchemaRoot {
         return new ClientMutation(id);
     }
 
+    @AuthenticatedHook()
     @Query({ type: Client , description: "Récupère les informations d'un client"})
     async Client(id: number, @Context ctx: GraphQLContext): Promise<Client> {
         return toObjectType(
@@ -212,11 +224,11 @@ export default class ClientSchemaRoot {
     @AuthenticatedHook()
     @Query({ type: Utilisateur , description: "Récupère les informations d'un utilisateur"})
     async Utilisateur(id: number, @Context ctx: GraphQLContext): Promise<Utilisateur> {
-        let _users = await ctx.repos.utilisateur.GetUtilisateurs({ id });
-        if(_users.length == 0) throw new Error(`Utilisateur with ${id} not found`);
+        let _user = Linq.from(await ctx.repos.utilisateur.GetUtilisateurs({ id: id })).firstOrDefault();
+        if(!_user) throw new Error(`Utilisateur with id:${id} not found`);
         return toObjectType(
             Utilisateur, 
-            _users[0]
+            _user
         )
     }
     

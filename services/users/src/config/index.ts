@@ -17,6 +17,10 @@ type config = {
     cookie: {
         key : string
         secret_key: string
+    },
+    cache: {
+        host: string
+        port: number
     }
 }
 
@@ -41,6 +45,10 @@ const config: config = {
     cookie: {
         key: nconf.get("cookie_key"),
         secret_key: nconf.get("cookie_secret_key")
+    },
+    cache: {
+        host: nconf.get("cache_host"),
+        port: nconf.get("cache_port")
     }
 }
 

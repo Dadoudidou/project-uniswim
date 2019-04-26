@@ -1,4 +1,4 @@
-import { SchemaRoot, Query, Context, Mutation, Arg } from "@dadoudidou/typegql"
+import { SchemaRoot, Query, Context, Mutation, Arg, ObjectType, Field } from "@dadoudidou/typegql"
 import Utilisateur from "../Types/Objects/Utilisateur";
 import { GraphQLContext } from "@graphQL/*";
 import * as jwt from "jsonwebtoken"
@@ -9,6 +9,11 @@ import { GraphQLString, GraphQLBoolean } from "graphql";
 import { CheckCryptText, CryptText } from "./../../../utils/Crypt";
 
 import * as bcrypt from "bcryptjs"
+import { AuthenticatedHook, OwnerHook } from "../Hooks/index";
+import { GQLScalarJSON } from "../Types/Scalars/JSON";
+import { toObjectType } from "../Helpers/ToObjectType";
+import { Linq } from "@utils/*";
+
 
 @SchemaRoot()
 export default class AuthSchemaRoot {
@@ -29,12 +34,20 @@ export default class AuthSchemaRoot {
         }
         const user = {
             id: _user.id,
-            client_id: _user.client_id
         }
         const token = jwt.sign(user, config.jwt.secret, {
             expiresIn: expiresIn | 86400
         });
         return token;
+    }
+
+    @AuthenticatedHook()
+    @Query({ type: () => Utilisateur })
+    async userConnected(@Context ctx: GraphQLContext): Promise<Utilisateur> {
+        return toObjectType(
+            Utilisateur,
+            Linq.from(await ctx.repos.utilisateur.GetUtilisateurs({ id: ctx.user.id })).firstOrDefault()
+        )
     }
     
 }

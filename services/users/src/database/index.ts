@@ -15,6 +15,7 @@ import UtilisateurAbilite from "./models/UtilisateurAbilite";
 import UtilisateurRole from "./models/UtilisateurRole";
 import ResetPasswordToken from "./models/ResetPasswordToken";
 import repositories from "./repositories/index";
+import ClientUtilisateur from "./models/ClientUtilisateur";
 
 
 
@@ -26,7 +27,7 @@ sequelize.addModels([
     Contact, Client, Application, Abilite, Role, 
     Utilisateur, ClientApplication, RoleAbilite, 
     UtilisateurAbilite, UtilisateurRole,
-    ResetPasswordToken
+    ResetPasswordToken, ClientUtilisateur
 ]);
 
 

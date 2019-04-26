@@ -4,6 +4,7 @@ import Contact from "./Contact";
 import * as moment from "moment"
 import ClientApplication from "./ClientApplication";
 import Utilisateur from "./Utilisateur";
+import ClientUtilisateur from "./ClientUtilisateur";
 
 @Table
 export default class Client extends Model<Client> {
@@ -37,7 +38,7 @@ export default class Client extends Model<Client> {
     @HasMany(() => Contact)
     contacts: Contact[]
 
-    @HasMany(() => Utilisateur)
+    @BelongsToMany(() => Utilisateur, () => ClientUtilisateur)
     utilisateurs: Utilisateur[]
 }
 

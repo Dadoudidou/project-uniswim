@@ -50,6 +50,7 @@
     "sequelize": "4.42.0",
     "reflect-metadata": "0.1.13",
     "sequelize-typescript": "0.6.7",
+    "sequelize-paper-trail": "2.6.1",
     "@dadoudidou/migration": "0.1.5",
     "dotenv": "6.2.0",
     "bcryptjs": "2.4.3",

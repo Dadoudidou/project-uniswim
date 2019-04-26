@@ -7,6 +7,7 @@ DROP TABLE `role_abilite`;
 DROP TABLE `role`;
 DROP TABLE `abilite`;
 DROP TABLE `client_application`;
+DROP TABLE `client_utilisateur`;
 DROP TABLE `application`;
 DROP TABLE `client`;
 SET FOREIGN_KEY_CHECKS=1;
